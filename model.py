@@ -106,6 +106,7 @@ class Branch3(nn.Module):
         input = self.fc1(input)
         input = self.fc2(input)
 
+        # divide w into 100 bins
         input = input * 100
         input = torch.round(input)
         input = input / 100

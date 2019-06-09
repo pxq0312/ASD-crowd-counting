@@ -8,10 +8,10 @@ import matplotlib.pyplot as plt
 import cv2
 import h5py
 
-part = 'part_B'
-stride = 16
-root = '/media/disk1/pxq/ShanghaiTech/'
-rootpath = os.path.join(root, part, 'train_data', 'images')
+part = 'part_B'  # only support part_B for now
+stride = 16  # input size / output size
+root = '/media/disk1/pxq/ShanghaiTech/'  # path to dataset
+rootpath = os.path.join(root, part + '_final', 'train_data', 'images')
 
 
 class TrainDataset(data.Dataset):

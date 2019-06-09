@@ -6,7 +6,7 @@ import glob
 from matplotlib import pyplot as plt
 from scipy.ndimage.filters import gaussian_filter
 
-root = r'D:\dataset\ShanghaiTech'
+root = '/media/disk1/pxq/ShanghaiTech/'
 
 part_A_train = os.path.join(root, 'part_A_final/train_data', 'images')
 part_A_test = os.path.join(root, 'part_A_final/test_data', 'images')

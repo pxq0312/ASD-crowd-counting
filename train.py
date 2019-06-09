@@ -8,9 +8,9 @@ from logger import Logger
 import os
 
 batch_size = 16
-end_epoch = 1000
+end_epoch = 500
 load_checkpoint = False
-save_path = '/media/disk1/pxq/ASD/'
+save_path = '/media/disk1/pxq/ASD/'  # path to save checkpoint
 
 train_dataset = TrainDataset()
 train_loader = data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -24,9 +24,11 @@ model = Model().to(device)
 criterion = nn.MSELoss(size_average=False).to(device)
 optimizer = optim.Adam(model.parameters(), lr=1e-4)
 
+# log to tensorboard
 loss_logger = Logger('./logs/loss')
 eval_logger = Logger('./logs/eval')
 
+# load checkpoint
 if load_checkpoint:
     checkpoint = torch.load(os.path.join(save_path, 'checkpoint_latest.pth'))
     model.load_state_dict(checkpoint['model'])
@@ -79,6 +81,7 @@ for epoch in range(start_epoch, end_epoch):
         eval_logger.scalar_summary('MAE', mae, epoch)
         eval_logger.scalar_summary('MSE', mse, epoch)
 
+        # save the latest and the best checkpoint
         state = {'epoch': epoch, 'model': model.state_dict(), 'optimizer': optimizer.state_dict(), 'mae': mae,
                  'mse': mse}
         torch.save(state, os.path.join(save_path, 'checkpoint_latest.pth'))
