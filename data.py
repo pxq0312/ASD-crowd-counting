@@ -9,7 +9,7 @@ import cv2
 import h5py
 
 part = 'part_B'
-out_scale = 16
+stride = 16
 root = '/media/disk1/pxq/ShanghaiTech/'
 rootpath = os.path.join(root, part, 'train_data', 'images')
 
@@ -33,27 +33,31 @@ class TrainDataset(data.Dataset):
 
         height, width = density.shape[0], density.shape[1]
 
+        # random resize
         scale = random.uniform(0.8, 1.2)
         height, width = int(height * scale), int(width * scale)
         scale_transforms = transforms.Resize((height, width))
         image = scale_transforms(image)
         density = cv2.resize(density, (width, height)) / scale / scale
 
+        # random crop
         h, w = 400, 400
         dh = random.randrange(0, height - h)
         dw = random.randrange(0, width - w)
         image = image.crop((dw, dh, dw + w, dh + h))
         density = density[dh:dh + h, dw:dw + w]
 
+        # random flip
         if random.random() < 0.5:
             image = image.transpose(Image.FLIP_LEFT_RIGHT)
             density = density[:, ::-1].copy()
 
-        density = cv2.resize(density, (h // out_scale, w // out_scale)) * out_scale * out_scale
+        density = cv2.resize(density, (h // stride, w // stride)) * stride * stride
 
         to_tensor = transforms.ToTensor()
         image = to_tensor(image)
 
+        # random gamma
         if random.random() < 0.3:
             gamma = random.uniform(0.5, 1.5)
             image = image ** gamma
